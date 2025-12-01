@@ -48,7 +48,7 @@ class AocMeta(ABC):
 		if cls.session is None:
 			raise ValueError("Improperly initialized")
 			
-		resp = cls.session.get(f"https://adventofcode.com/2024/day/{cls.day}/input")
+		resp = cls.session.get(f"https://adventofcode.com/2025/day/{cls.day}/input")
 		result = resp.content.decode()
 		result = cls.process_input(result)
 		return result
@@ -57,7 +57,7 @@ class AocMeta(ABC):
 	@classmethod
 	def submit_answer(cls, level, answer):
 		while True:
-		    resp = cls.session.post(f"https://adventofcode.com/2024/day/{cls.day}/answer", data={"level": level, "answer": answer})
+		    resp = cls.session.post(f"https://adventofcode.com/2025/day/{cls.day}/answer", data={"level": level, "answer": answer})
 		    content = resp.content.decode()
 		    if "That's not the right answer" in content:
 		        return False
