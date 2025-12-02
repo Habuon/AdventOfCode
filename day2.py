@@ -89,31 +89,31 @@ class AocMeta(ABC):
 
 class Solution(AocMeta):
 	possible_numbers = set()
-	max_repeat = 3
 
 	@classmethod
 	def process_input(cls, inp: str) -> dict:
 		result = []
 		inp = inp.strip()
 		ranges = [[int(y) for y in x.split("-")] for x in inp.split(",")]
-		return {"ranges": ranges}
-	
-	@classmethod
-	def _possible_numbers(cls, max_number: int) -> None:
-		length = len(str(max_number)) // 2
-		for num in range(1, 10**(length + 1)):
-			for rep in range(2, cls.max_repeat):
-				cls.possible_numbers.add(int(f"{num}" * rep))
-		   
-
-	@classmethod
-	def first_star(cls, inp: dict) -> int:
-		ranges = inp["ranges"]
-		
 		max_number = max([x[0] for x in ranges])
 		
-		cls._possible_numbers(max_number)
 		ranges = [set(range(int(x), int(y))) for x, y in ranges]
+		
+		return {"ranges": ranges, "max_number": max_number}
+	
+	@classmethod
+	def _possible_numbers(cls, max_number: int, max_repeat: int) -> None:
+		length = len(str(max_number)) // 2
+		for num in range(1, 10**(length + 1)):
+			for rep in range(2, max_repeat + 1):
+				cls.possible_numbers.add(int(f"{num}" * rep))
+		  
+		  
+	@classmethod
+	def first_star(cls, inp: dict) -> int:
+		ranges, max_number = inp["ranges"], inp["max_number"]
+		
+		cls._possible_numbers(max_number=max_number, max_repeat=2)
 		
 		result = 0
 		for num_range in ranges:
@@ -124,16 +124,11 @@ class Solution(AocMeta):
 
 	@classmethod
 	def second_star(cls, inp: dict) -> int:
-		ranges = inp["ranges"]
+		ranges, max_number = inp["ranges"], inp["max_number"]
 		
-		max_number = max([x[0] for x in ranges])
-		
-		cls.max_repeat = len(str(max_number))
-		
-		cls._possible_numbers(max_number)
-		
-		ranges = [set(range(int(x), int(y))) for x, y in ranges]
-		
+		max_repeat = len(str(max_number))
+		cls._possible_numbers(max_number=max_number, max_repeat=max_repeat)
+				
 		result = 0
 		for num_range in ranges:
 			result += sum(num_range.intersection(cls.possible_numbers))		
