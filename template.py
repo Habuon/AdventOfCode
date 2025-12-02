@@ -14,50 +14,40 @@ class Clock:
 
 
 class AocMeta(ABC):
-	session = None 
-	day = None
 
-
-	@classmethod
-	def initialize(cls, day, cookies):
-		cls.session = requests.Session()
-		requests.utils.add_dict_to_cookiejar(cls.session.cookies, cookies)
-		cls.day = day
+	def __init__(self, day, cookies):
+		self.session = requests.Session()
+		self.day = day		
+		
+		requests.utils.add_dict_to_cookiejar(self.session.cookies, cookies)
 	
 	
-	@classmethod
 	@abstractmethod
-	def process_input(cls, inp: str) -> dict:
+	def process_input(self, inp: str) -> dict:
 		...
 		   
 		    
-	@classmethod
 	@abstractmethod
-	def first_star(cls, inp):
+	def first_star(self, inp):
 		...
 		    
 		    
-	@classmethod
 	@abstractmethod
-	def second_star(cls, inp):
+	def second_star(self, inp):
 		...
 	
-	
-	@classmethod
-	def get_input(cls) -> dict:
-		if cls.session is None:
+	def get_input(self) -> dict:
+		if self.session is None:
 			raise ValueError("Improperly initialized")
 			
-		resp = cls.session.get(f"https://adventofcode.com/2025/day/{cls.day}/input")
+		resp = self.session.get(f"https://adventofcode.com/2025/day/{self.day}/input")
 		result = resp.content.decode()
-		result = cls.process_input(result)
+		result = self.process_input(result)
 		return result
 
-
-	@classmethod
-	def submit_answer(cls, level, answer):
+	def submit_answer(self, level, answer):
 		while True:
-		    resp = cls.session.post(f"https://adventofcode.com/2025/day/{cls.day}/answer", data={"level": level, "answer": answer})
+		    resp = self.session.post(f"https://adventofcode.com/2025/day/{self.day}/answer", data={"level": level, "answer": answer})
 		    content = resp.content.decode()
 		    if "That's not the right answer" in content:
 		        return False
@@ -68,46 +58,44 @@ class AocMeta(ABC):
 		    return True
 		
 		
-	@classmethod
-	def run(cls):
-		inp = cls.get_input()
-		first_answer = cls.first_star(inp)
-		correct = cls.submit_answer(level=1, answer=first_answer)
+	def run(self):
+		inp = self.get_input()
+		first_answer = self.first_star(inp)
+		correct = self.submit_answer(level=1, answer=first_answer)
 		print(f"[*] First star result: {first_answer} ... {'correct' if correct else 'incorrect'}")
 		if not correct:
 			return False
 			
 		time.sleep(10)
 		
-		second_answer = cls.second_star(inp)
-		correct = cls.submit_answer(level=2, answer=second_answer)
+		second_answer = self.second_star(inp)
+		correct = self.submit_answer(level=2, answer=second_answer)
 		print(f"[*] Second star result: {second_answer} ... {'correct' if correct else 'incorrect'}")
 		
 		return correct
 
 
 class Solution(AocMeta):
-	@classmethod
-	def process_input(cls, inp: str) -> dict:
+	def process_input(self, inp: str) -> dict:
 		...
 		   
-	@classmethod
-	def first_star(cls, inp):
+	def first_star(self, inp):
+		...
+		   
+	def second_star(self, inp):
 		...
 
-	@classmethod
-	def second_star(cls, inp):
-		...
 
 
 def main():
 	day = ""
 	cookies = {"session": "<SESSION_ID>"}
 	
-	Solution.initialize(day, cookies)
-	
+	solution = Solution(day=day, cookies=cookies)
+		
 	with Clock():
-		Solution.run()
+		solution.run()
+
 
 
 if __name__ == "__main__":
