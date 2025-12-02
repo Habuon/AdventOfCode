@@ -77,12 +77,15 @@ class AocMeta(ABC):
 
 class Solution(AocMeta):
 	def process_input(self, inp: str) -> dict:
+		# TODO implement me 
 		...
 		   
 	def first_star(self, inp):
+		# TODO implement me 
 		...
 		   
 	def second_star(self, inp):
+		# TODO implement me 
 		...
 
 
