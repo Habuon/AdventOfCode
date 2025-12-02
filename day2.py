@@ -95,18 +95,21 @@ class Solution(AocMeta):
 		result = []
 		inp = inp.strip()
 		ranges = [[int(y) for y in x.split("-")] for x in inp.split(",")]
-		max_number = max([x[0] for x in ranges])
+		max_number = max([x[1] for x in ranges])
 		
-		ranges = [set(range(int(x), int(y))) for x, y in ranges]
+		ranges = [set(range(int(x), int(y) + 1)) for x, y in ranges]
 		
 		return {"ranges": ranges, "max_number": max_number}
 	
 	@classmethod
 	def _possible_numbers(cls, max_number: int, max_repeat: int) -> None:
-		length = len(str(max_number)) // 2
-		for num in range(1, 10**(length + 1)):
+		max_length = len(str(max_number))
+		for num in range(1, 10**(1 + max_length // 2)):
 			for rep in range(2, max_repeat + 1):
-				cls.possible_numbers.add(int(f"{num}" * rep))
+				repeated_number = int(f"{num}" * rep)
+				if repeated_number > max_number:
+					continue
+				cls.possible_numbers.add(repeated_number)
 		  
 		  
 	@classmethod
