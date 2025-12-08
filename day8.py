@@ -3,24 +3,6 @@ import time
 import math
 import uuid
 from abc import ABC, abstractmethod
-from scipy.spatial import KDTree
-
-
-def next_best_pair(points, blocked, tree=None, k=1000):
-    dist, idx = tree.query(points, k=k)
-
-    best = None
-    best_dist = float("inf")
-
-    for i in range(len(points)):
-        for j_i in range(1, k):
-            j = idx[i, j_i]
-            pair = (min(i,j), max(i,j))
-            if pair not in blocked and dist[i,j_i] < best_dist:
-                best = pair
-                best_dist = dist[i,j_i]
-
-    return best, best_dist
 
 
 def compute_distances(points):
