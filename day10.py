@@ -2,13 +2,6 @@ import requests
 import time
 from abc import ABC, abstractmethod
 
-from heapq import heappush, heappop
-import numpy as np
-from scipy.optimize import linprog
-
-from pysat.formula import CNF, IDPool
-from pysat.card import CardEnc
-from pysat.solvers import Minisat22
 from pulp import LpProblem, LpVariable, lpSum, LpMinimize, LpInteger, LpStatus
 
 
@@ -147,7 +140,7 @@ class Solution(AocMeta):
 			# Minimize total presses of the buttons 
 			prob += lpSum(x)
 
-			# Add constraints that sum of all buttons that change index j have to be sme as counter
+			# Add constraints tht sum of all buttons that change index j have to be sme as counter
 			for j in range(len(counters)):
 				prob += lpSum(x[i] for i, b in enumerate(buttons) if j in b) == counters[j]
 
@@ -169,7 +162,7 @@ class Solution(AocMeta):
 		for machine in machines:
 			target_joltage, buttons = machine["target_joltage"], machine["buttons"]
 
-			minimal_depth = min_presses_ilp(buttons=buttons, counters=list(target_joltage))
+			minimal_depth = min_presses(buttons=buttons, counters=list(target_joltage))
 			minimal_depths.append(minimal_depth)
 
 		return sum(minimal_depths)
